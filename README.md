@@ -1,2 +1,2 @@
 # StudyIava
-study java 
+A simple demo with SpringBoot + Mybatis 
