@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.qis.qa.report.dao.ReportDaoMapper">
+
+    <resultMap id="reportResult" type="ReportVO">
+        <id property="id" column="id"></id>
+        <result property="reportName" column="report_name"></result>
+        <result property="reportDesc" column="report_desc"></result>
+        <collection property="reportTabVO" ofType="ReportTabVO">
+            <id property="id" column="tabId"></id>
+            <result property="reportId" column="report_id"></result>
+            <result property="reportTabName" column="report_tab_name"></result>
+            <result property="reportTabOrder" column="report_tab_order"></result>
+            <collection property="reportTabLayoutVO" ofType="ReportTabLayoutVO">
+                <id property="id" column="tabLayoutId"></id>
+                <result property="reportId" column="report_id"></result>
+                <result property="reportTabId" column="report_tab_id"></result>
+                <result property="itemId" column="item_id"></result>
+                <result  property="itemName" column="item_name"></result>
+                <result property="itemSizeX" column="item_size_x"></result>
+                <result  property="itemSizeY" column="item_size_y"></result>
+                <result property="itemRowSize" column="item_row_size"></result>
+                <result  property="itemColSize" column="item_col_size"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getReportList"  resultMap="reportResult">
+
+        SELECT
+			t1.id,
+			t1.report_name,
+			t1.report_desc,
+			t2.id as tabId,
+			t2.report_id,
+			t2.report_tab_name,
+			t2.report_tab_order,
+			t3.id as tabLayoutId,
+			t3.report_id,
+			t3.report_tab_id,
+			t3.item_id,
+			t3.item_name,
+			t3.item_size_x,
+			t3.item_size_y,
+			t3.item_row_size,
+			t3.item_col_size
+		FROM
+			report_tab_layout t3
+		LEFT JOIN report_tab t2 ON t3.report_tab_id = t2.id
+		LEFT JOIN report_base t1 ON t2.report_id = t1.id
+    </select>
+
+    <select id="getReportById" parameterType="int"  resultMap="reportResult">
+		SELECT
+			t1.id,
+			t1.report_name,
+			t1.report_desc,
+			t2.id as tabId,
+			t2.report_id,
+			t2.report_tab_name,
+			t2.report_tab_order,
+			t3.id as tabLayoutId,
+			t3.report_id,
+			t3.report_tab_id,
+			t3.item_id,
+			t3.item_name,
+			t3.item_size_x,
+			t3.item_size_y,
+			t3.item_row_size,
+			t3.item_col_size
+            FROM
+                report_tab_layout t3
+           LEFT JOIN report_tab t2 ON t3.report_tab_id = t2.id
+           LEFT JOIN report_base t1 ON t2.report_id = t1.id
+
+            WHERE
+                t1.id = #{reportId}
+    </select>
+</mapper>
